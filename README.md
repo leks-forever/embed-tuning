@@ -1,6 +1,6 @@
 
 
-### Embed-tune
+### Embed-tuning
 ### Raw experimental solution
 Download [bible.csv](https://huggingface.co/datasets/leks-forever/bible-lezghian-russian) and place it in the [data](data) folder
 
