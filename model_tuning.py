@@ -74,14 +74,15 @@ def main():
         bf16=True,  # Set to True if you have a GPU that supports BF16
         batch_sampler=BatchSamplers.NO_DUPLICATES,  # MultipleNegativesRankingLoss benefits from no duplicate samples in a batch
         eval_strategy="steps",
-        eval_steps=0.5,
+        eval_steps=4432,
         save_strategy="steps",
-        save_steps=100,
+        save_steps=4432,
         save_total_limit=2,
         logging_steps=100,
         run_name="multilingual-e5-large-tuned",  # Will be used in W&B if `wandb` is installed
         save_on_each_node=True,
         dataloader_drop_last=False,
+        load_best_model_at_end=True,
         logging_dir="./tb_logs",
     )
 
