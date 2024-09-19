@@ -1,0 +1,1 @@
+Download [bible.csv](https://huggingface.co/datasets/leks-forever/bible-lezghian-russian) and place it here
