@@ -7,7 +7,8 @@ Download [bible.csv](https://huggingface.co/datasets/leks-forever/bible-lezghian
 Scripts:        
 [neg_mining.ipynb](neg_mining.ipynb) - prepare negative samples     
 [utils.py](utils.py) - split prepaired df to train/test/val     
-[model_tuning.py](model_tuning.py) - finetune model
+[model_tuning.py](model_tuning.py) - finetune model    
+[text_alignment.ipynb](text_alignment.ipynb) - text alignment (example right now)
 
 BACKLOG:
 pay attention to other [models](https://github.com/avidale/encodechka)
