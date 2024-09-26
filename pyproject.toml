@@ -2,7 +2,7 @@
 name = "e5-finetuning"
 version = "0.1.0"
 description = ""
-authors = ["Rustam Akimov <raki@1c.ru>"]
+authors = ["Rustam Akimov"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

@@ -35,27 +35,28 @@ df_val = pd.read_csv("data/val.csv")
 
 
 # OPTION 2: current sentence is positive, some others (yours) are negatives
+# NOTE (https://huggingface.co/intfloat/multilingual-e5-large): Use "query: " prefix for symmetric tasks such as semantic similarity, bitext mining, paraphrase retrieval.
 train_dataset = DDataset.from_dict(
     {
-        "anchor": df_train["anchor"].to_list(),
-        "positive": df_train["positive"].to_list(),
-        "negative": df_train["negative"].to_list()
+        "anchor": ["query: " + text for text in df_train["anchor"].to_list()],
+        "positive": ["query: " + text for text in df_train["positive"].to_list()],
+        "negative": ["query: " + text for text in df_train["negative"].to_list()]
     }
 )
 
 test_dataset = DDataset.from_dict(
     {
-        "anchor": df_test["anchor"].to_list(),
-        "positive": df_test["positive"].to_list(),
-        "negative": df_test["negative"].to_list()
+        "anchor": ["query: " + text for text in df_test["anchor"].to_list()],
+        "positive": ["query: " + text for text in df_test["positive"].to_list()],
+        "negative": ["query: " + text for text in df_test["negative"].to_list()]
     }
 )
 
 val_dataset = DDataset.from_dict(
     {
-        "anchor": df_val["anchor"].to_list(),
-        "positive": df_val["positive"].to_list(),
-        "negative": df_val["negative"].to_list()
+        "anchor": ["query: " + text for text in df_val["anchor"].to_list()],
+        "positive": ["query: " + text for text in df_val["positive"].to_list()],
+        "negative": ["query: " + text for text in df_val["negative"].to_list()]
     }
 )
 
