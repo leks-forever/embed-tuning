@@ -16,6 +16,8 @@ sentence-transformers = {extras = ["train"], version = "^3.1.0"}
 accelerate = "^0.34.2"
 datasets = "^3.0.0"
 tensorboard = "^2.17.1"
+sacremoses = "^0.1.1"
+sentencepiece = "^0.2.0"
 
 
 [build-system]

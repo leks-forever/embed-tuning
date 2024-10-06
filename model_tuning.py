@@ -12,7 +12,7 @@ from sentence_transformers import (
 )
 from sentence_transformers.losses import MultipleNegativesRankingLoss
 from sentence_transformers.training_args import BatchSamplers
-from sentence_transformers.evaluation import TripletEvaluator
+from sentence_transformers.evaluation import TranslationEvaluator
 
 # https://sbert.net/docs/sentence_transformer/training_overview.html
 
@@ -87,13 +87,17 @@ def main():
         logging_dir="./tb_logs",
     )
 
-
-    val_evaluator = TripletEvaluator(
-        anchors  = val_dataset["anchor"],
-        positives = val_dataset["positive"],
-        negatives = val_dataset["negative"],
-        name="e5-val",
+    val_evaluator = TranslationEvaluator(
+        source_sentences = val_dataset["anchor"],
+        target_sentences = val_dataset["positive"],
     )
+
+    # val_evaluator = TripletEvaluator(
+    #     anchors  = val_dataset["anchor"],
+    #     positives = val_dataset["positive"],
+    #     negatives = val_dataset["negative"],
+    #     name="e5-val",
+    # )
     # val_evaluator(model)
 
     trainer = SentenceTransformerTrainer(
@@ -106,13 +110,20 @@ def main():
     )
     trainer.train()
 
-    test_evaluator = TripletEvaluator(
-        anchors = test_dataset["anchor"],
-        positives = test_dataset["positive"],
-        negatives = test_dataset["negative"],
+    test_evaluator = TranslationEvaluator(
+        source_sentences = test_dataset["anchor"],
+        target_sentences = test_dataset["positive"],
         name="e5-test",
     )
-    test_evaluator(model)
+
+    # test_evaluator = TripletEvaluator(
+    #     anchors = test_dataset["anchor"],
+    #     positives = test_dataset["positive"],
+    #     negatives = test_dataset["negative"],
+    #     name="e5-test",
+    # )
+    results = test_evaluator(model)
+    print(results)
 
     model.save_pretrained("models/multilingual-e5-large-tuned/final")
 

@@ -5,12 +5,13 @@ from sklearn.model_selection import train_test_split
 from pathlib import Path
 
 
-def split_data(df_path: str = "data/bible.csv", df_with_negatives_path: str = "data/bible_with_neg.csv", save_dir: str = "data"):
+def split_data(df_path: str = "data/bible.csv", df_with_negatives_path: str = "data/bible_with_neg.csv", save_dir: str = "data", both_sides: int = False):
     df = pd.read_csv(df_path)
     df_with_negatives = pd.read_csv(df_with_negatives_path)
 
     anchor, positive, negative = [], [], []
     for _, item in tqdm(df_with_negatives.iterrows(), total = len(df)):
+        # src anchor: ru; pos: lez; neg: lez
         src_text = item["text_ru"] # anchor
         tgt_text = item["text_lez"] # positive translation
         neg_texts = [df.iloc[int(neg_idx)]["text_lez"] for neg_idx in ast.literal_eval(item["negative_id"])] # negative translations
@@ -19,6 +20,17 @@ def split_data(df_path: str = "data/bible.csv", df_with_negatives_path: str = "d
             anchor.append(src_text)
             positive.append(tgt_text)
             negative.append(neg_text)
+
+        if both_sides:
+            # src anchor: lez; pos: ru; neg: ru
+            src_text = item["text_lez"] # anchor
+            tgt_text = item["text_ru"] # positive translation
+            neg_texts = [df.iloc[int(neg_idx)]["text_ru"] for neg_idx in ast.literal_eval(item["negative_id"])] # negative translations
+
+            for neg_text in neg_texts:
+                anchor.append(src_text)
+                positive.append(tgt_text)
+                negative.append(neg_text)
 
     # Шаг 1: Разделить данные на train и temp (сначала отделить 90% для train)
     anchor_train, anchor_temp, positive_train, positive_temp, negative_train, negative_temp = train_test_split(
