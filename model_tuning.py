@@ -36,37 +36,40 @@ df_val = pd.read_csv("data/val.csv")
 
 # OPTION 2: current sentence is positive, some others (yours) are negatives
 # NOTE (https://huggingface.co/intfloat/multilingual-e5-large): Use "query: " prefix for symmetric tasks such as semantic similarity, bitext mining, paraphrase retrieval.
+# PREFIX = "query: " # For multilingual-e5-large
+PREFIX = "" # For LaBSE you shouldn't use prefix "query: "
+
 train_dataset = DDataset.from_dict(
     {
-        "anchor": ["query: " + text for text in df_train["anchor"].to_list()],
-        "positive": ["query: " + text for text in df_train["positive"].to_list()],
-        "negative": ["query: " + text for text in df_train["negative"].to_list()]
+        "anchor": [PREFIX + text for text in df_train["anchor"].to_list()],
+        "positive": [PREFIX + text for text in df_train["positive"].to_list()],
+        "negative": [PREFIX + text for text in df_train["negative"].to_list()]
     }
 )
 
 test_dataset = DDataset.from_dict(
     {
-        "anchor": ["query: " + text for text in df_test["anchor"].to_list()],
-        "positive": ["query: " + text for text in df_test["positive"].to_list()],
-        "negative": ["query: " + text for text in df_test["negative"].to_list()]
+        "anchor": [PREFIX + text for text in df_test["anchor"].to_list()],
+        "positive": [PREFIX + text for text in df_test["positive"].to_list()],
+        "negative": [PREFIX + text for text in df_test["negative"].to_list()]
     }
 )
 
 val_dataset = DDataset.from_dict(
     {
-        "anchor": ["query: " + text for text in df_val["anchor"].to_list()],
-        "positive": ["query: " + text for text in df_val["positive"].to_list()],
-        "negative": ["query: " + text for text in df_val["negative"].to_list()]
+        "anchor": [PREFIX + text for text in df_val["anchor"].to_list()],
+        "positive": [PREFIX + text for text in df_val["positive"].to_list()],
+        "negative": [PREFIX + text for text in df_val["negative"].to_list()]
     }
 )
 
 def main():
-    model = SentenceTransformer('intfloat/multilingual-e5-large')
+    model = SentenceTransformer('sentence-transformers/LaBSE')
     loss = MultipleNegativesRankingLoss(model)
 
     args = SentenceTransformerTrainingArguments(
-        output_dir="models/multilingual-e5-large-tuned",
-        num_train_epochs=10,
+        output_dir="models/LaBSE-tuned",
+        num_train_epochs=15,
         per_device_train_batch_size=14,
         per_device_eval_batch_size=14,
         learning_rate=2e-5,
@@ -80,7 +83,7 @@ def main():
         save_steps=4432,
         save_total_limit=2,
         logging_steps=100,
-        run_name="multilingual-e5-large-tuned",  # Will be used in W&B if `wandb` is installed
+        run_name="labse-tuned",  # Will be used in W&B if `wandb` is installed
         save_on_each_node=True,
         dataloader_drop_last=False,
         load_best_model_at_end=True,
@@ -125,7 +128,7 @@ def main():
     results = test_evaluator(model)
     print(results)
 
-    model.save_pretrained("models/multilingual-e5-large-tuned/final")
+    model.save_pretrained("models/LaBSE-tuned/final")
 
 
 if __name__ == "__main__":
